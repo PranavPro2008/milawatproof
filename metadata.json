@@ -1,0 +1,6 @@
+{
+  "name": "Milawat Proof",
+  "description": "Super simple MVP e-commerce store for food adulteration home testing kits (milk, paneer, and ghee) with customer pre-ordering and admin management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

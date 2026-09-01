@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && (request.auth.uid == userId);
+    }
+
+    // Pre-orders: Public creation (with or without auth), owner or anyone querying by ID/phone can lookup
+    match /preorders/{orderId} {
+      allow read, write: if true;
+    }
+
+    // Products catalog: readable by all, editable for catalog maintenance
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

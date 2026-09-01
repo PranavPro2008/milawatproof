@@ -1,0 +1,77 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user profile and role",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer", "admin"] },
+        "createdAt": { "type": "string" },
+        "phone": { "type": "string" },
+        "defaultAddress": { "type": "object" }
+      },
+      "required": ["id", "email", "role"]
+    },
+    "PreOrder": {
+      "title": "PreOrder",
+      "description": "Pre-order reservation placed by user or guest",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string", "description": "Optional Auth UID if signed in, or guest" },
+        "createdAt": { "type": "string" },
+        "customer": { "type": "object" },
+        "items": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string" },
+        "paymentPreference": { "type": "string" },
+        "batchDeliveryEstimate": { "type": "string" }
+      },
+      "required": ["id", "createdAt", "customer", "items", "totalAmount", "status", "paymentPreference"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Chemical testing solution kits catalog",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "price": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "testsCount": { "type": "number" },
+        "detects": { "type": "array" },
+        "inStock": { "type": "boolean" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["id", "name", "category", "price", "active"]
+    }
+  },
+  "firestore": {
+    "users": {
+      "description": "User profile collection",
+      "rules": {
+        "read": "request.auth != null && (request.auth.uid == resource.id || request.auth.token.role == 'admin')",
+        "write": "request.auth != null && (request.auth.uid == resource.id || request.auth.token.role == 'admin')"
+      }
+    },
+    "preorders": {
+      "description": "Pre-orders collection for testing kit reservations",
+      "rules": {
+        "read": "true",
+        "write": "true"
+      }
+    },
+    "products": {
+      "description": "Products catalog",
+      "rules": {
+        "read": "true",
+        "write": "true"
+      }
+    }
+  }
+}
